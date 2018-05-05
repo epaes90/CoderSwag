@@ -1,5 +1,6 @@
 package studio.kreadiv.coderswag.Controller
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import studio.kreadiv.coderswag.Adapters.ProductAdapter
 import studio.kreadiv.coderswag.R
 import studio.kreadiv.coderswag.Services.DataService
 import studio.kreadiv.coderswag.Utilities.EXTRA_CATEGORY
+import studio.kreadiv.coderswag.Utilities.EXTRA_PRODUCT
 
 class ProductsActivity : AppCompatActivity() {
 
@@ -21,7 +23,12 @@ class ProductsActivity : AppCompatActivity() {
 
         val categoryType = intent.getStringExtra(EXTRA_CATEGORY)
 
-        adapter = ProductAdapter(this, DataService.getProduct(categoryType))
+        adapter = ProductAdapter(this, DataService.getProduct(categoryType)) { product ->
+
+            val productDetailIntent = Intent(this, ProductDetailActvity::class.java)
+            productDetailIntent.putExtra(EXTRA_PRODUCT, product)
+            startActivity(productDetailIntent)
+        }
 
         val orientation = resources.configuration.orientation
         val screenSize = resources.configuration.screenWidthDp

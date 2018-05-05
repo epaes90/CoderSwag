@@ -10,7 +10,9 @@ import android.widget.TextView
 import studio.kreadiv.coderswag.Model.Product
 import studio.kreadiv.coderswag.R
 
-class ProductAdapter(val context: Context, val products: List<Product>) : RecyclerView.Adapter<ProductAdapter.ProductHolder>(){
+class ProductAdapter(val context: Context, val products: List<Product>
+                     , val itemClick: (Product) -> Unit)
+    : RecyclerView.Adapter<ProductAdapter.ProductHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.product_list_item, parent, false)
@@ -22,7 +24,7 @@ class ProductAdapter(val context: Context, val products: List<Product>) : Recycl
     }
 
     override fun onBindViewHolder(holder: ProductHolder, position: Int) {
-        holder?.bindProduct(products[position], context)
+        holder?.bindProduct(products[position], context, itemClick)
     }
 
     inner class ProductHolder(itemView: View?) : RecyclerView.ViewHolder(itemView){
@@ -31,12 +33,13 @@ class ProductAdapter(val context: Context, val products: List<Product>) : Recycl
         private val productName = itemView?.findViewById<TextView>(R.id.productTitle)
         private val productPrice = itemView?.findViewById<TextView>(R.id.productPrice)
 
-        fun bindProduct(product: Product, context: Context){
+        fun bindProduct(product: Product, context: Context, itemClick: (Product) -> Unit){
             val resourceId = context.resources.getIdentifier(product.image, "drawable"
                     ,context.packageName)
             productImage?.setImageResource(resourceId)
             productName?.text = product.title
             productPrice?.text = product.price
+            itemView.setOnClickListener { itemClick(product) }
         }
     }
 }
